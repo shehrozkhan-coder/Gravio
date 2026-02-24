@@ -1,6 +1,0 @@
-{
-  "framework": "nextjs",
-  "buildCommand": "cd gravio && npm install && npm run build",
-  "installCommand": "cd gravio && npm install",
-  "outputDirectory": "gravio/.next"
-}
