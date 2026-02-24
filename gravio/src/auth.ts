@@ -43,20 +43,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     async signIn({user, account}){
       if(account?.provider == "google"){
-        await connectDb()
-        let dbUser = await User.findOne({email:user.email})
-        if(!dbUser){
-          dbUser = await User.create({
-            name: user.name,
-            email: user.email,
-            image: user.image
-          })
+        try {
+          await connectDb()
+          let dbUser = await User.findOne({email:user.email})
+          if(!dbUser){
+            dbUser = await User.create({
+              name: user.name,
+              email: user.email,
+              image: user.image
+            })
+          }
+          user.id = dbUser._id.toString()
+          user.role = dbUser.role
+        } catch(error) {
+          console.error("Google SignIn Error:", error)
+          return false
         }
-        user.id = dbUser._id.toString()
-        user.role = dbUser.role
       }
       return true 
     },
+
     jwt({token, user, trigger, session}) {
         if(user){
             token.id = user.id,
