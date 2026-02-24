@@ -14,7 +14,11 @@ async function Home() {
 
   const session = await auth();
 
-  const user = await User.findById(session?.user?.id).lean();
+  if (!session || !session.user?.email) {
+    redirect("/login");
+  }
+
+  const user = await User.findOne({ email: session.user.email }).lean();
 
   if (!user) {
     redirect("/login");
